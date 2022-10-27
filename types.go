@@ -216,6 +216,61 @@ func (obj *PeriodWithPayout) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (e
 	return nil
 }
 
+type ReceiptWithStartFinish struct {
+	Receipt               ag_solanago.PublicKey
+	Start                 uint64
+	Finish                uint64
+	HasValidatorWithdrawn bool
+}
+
+func (obj ReceiptWithStartFinish) MarshalWithEncoder(encoder *ag_binary.Encoder) (err error) {
+	// Serialize `Receipt` param:
+	err = encoder.Encode(obj.Receipt)
+	if err != nil {
+		return err
+	}
+	// Serialize `Start` param:
+	err = encoder.Encode(obj.Start)
+	if err != nil {
+		return err
+	}
+	// Serialize `Finish` param:
+	err = encoder.Encode(obj.Finish)
+	if err != nil {
+		return err
+	}
+	// Serialize `HasValidatorWithdrawn` param:
+	err = encoder.Encode(obj.HasValidatorWithdrawn)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (obj *ReceiptWithStartFinish) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error) {
+	// Deserialize `Receipt`:
+	err = decoder.Decode(&obj.Receipt)
+	if err != nil {
+		return err
+	}
+	// Deserialize `Start`:
+	err = decoder.Decode(&obj.Start)
+	if err != nil {
+		return err
+	}
+	// Deserialize `Finish`:
+	err = decoder.Decode(&obj.Finish)
+	if err != nil {
+		return err
+	}
+	// Deserialize `HasValidatorWithdrawn`:
+	err = decoder.Decode(&obj.HasValidatorWithdrawn)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 type PeriodStatus ag_binary.BorshEnum
 
 const (

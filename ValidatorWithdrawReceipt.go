@@ -21,7 +21,7 @@ type ValidatorWithdrawReceipt struct {
 	//
 	// [3] = [WRITE] payout
 	//
-	// [4] = [] validatorMember
+	// [4] = [] validatorManager
 	//
 	// [5] = [WRITE] receipt
 	//
@@ -87,14 +87,14 @@ func (inst *ValidatorWithdrawReceipt) GetPayoutAccount() *ag_solanago.AccountMet
 	return inst.AccountMetaSlice.Get(3)
 }
 
-// SetValidatorMemberAccount sets the "validatorMember" account.
-func (inst *ValidatorWithdrawReceipt) SetValidatorMemberAccount(validatorMember ag_solanago.PublicKey) *ValidatorWithdrawReceipt {
-	inst.AccountMetaSlice[4] = ag_solanago.Meta(validatorMember)
+// SetValidatorManagerAccount sets the "validatorManager" account.
+func (inst *ValidatorWithdrawReceipt) SetValidatorManagerAccount(validatorManager ag_solanago.PublicKey) *ValidatorWithdrawReceipt {
+	inst.AccountMetaSlice[4] = ag_solanago.Meta(validatorManager)
 	return inst
 }
 
-// GetValidatorMemberAccount gets the "validatorMember" account.
-func (inst *ValidatorWithdrawReceipt) GetValidatorMemberAccount() *ag_solanago.AccountMeta {
+// GetValidatorManagerAccount gets the "validatorManager" account.
+func (inst *ValidatorWithdrawReceipt) GetValidatorManagerAccount() *ag_solanago.AccountMeta {
 	return inst.AccountMetaSlice.Get(4)
 }
 
@@ -186,7 +186,7 @@ func (inst *ValidatorWithdrawReceipt) Validate() error {
 			return errors.New("accounts.Payout is not set")
 		}
 		if inst.AccountMetaSlice[4] == nil {
-			return errors.New("accounts.ValidatorMember is not set")
+			return errors.New("accounts.ValidatorManager is not set")
 		}
 		if inst.AccountMetaSlice[5] == nil {
 			return errors.New("accounts.Receipt is not set")
@@ -220,16 +220,16 @@ func (inst *ValidatorWithdrawReceipt) EncodeToTree(parent ag_treeout.Branches) {
 
 					// Accounts of the instruction:
 					instructionBranch.Child("Accounts[len=10]").ParentFunc(func(accountsBranch ag_treeout.Branches) {
-						accountsBranch.Child(ag_format.Meta("     controller", inst.AccountMetaSlice.Get(0)))
-						accountsBranch.Child(ag_format.Meta("       pipeline", inst.AccountMetaSlice.Get(1)))
-						accountsBranch.Child(ag_format.Meta("        pcVault", inst.AccountMetaSlice.Get(2)))
-						accountsBranch.Child(ag_format.Meta("         payout", inst.AccountMetaSlice.Get(3)))
-						accountsBranch.Child(ag_format.Meta("validatorMember", inst.AccountMetaSlice.Get(4)))
-						accountsBranch.Child(ag_format.Meta("        receipt", inst.AccountMetaSlice.Get(5)))
-						accountsBranch.Child(ag_format.Meta("  validatorFund", inst.AccountMetaSlice.Get(6)))
-						accountsBranch.Child(ag_format.Meta(" validatorAdmin", inst.AccountMetaSlice.Get(7)))
-						accountsBranch.Child(ag_format.Meta("   tokenProgram", inst.AccountMetaSlice.Get(8)))
-						accountsBranch.Child(ag_format.Meta("          clock", inst.AccountMetaSlice.Get(9)))
+						accountsBranch.Child(ag_format.Meta("      controller", inst.AccountMetaSlice.Get(0)))
+						accountsBranch.Child(ag_format.Meta("        pipeline", inst.AccountMetaSlice.Get(1)))
+						accountsBranch.Child(ag_format.Meta("         pcVault", inst.AccountMetaSlice.Get(2)))
+						accountsBranch.Child(ag_format.Meta("          payout", inst.AccountMetaSlice.Get(3)))
+						accountsBranch.Child(ag_format.Meta("validatorManager", inst.AccountMetaSlice.Get(4)))
+						accountsBranch.Child(ag_format.Meta("         receipt", inst.AccountMetaSlice.Get(5)))
+						accountsBranch.Child(ag_format.Meta("   validatorFund", inst.AccountMetaSlice.Get(6)))
+						accountsBranch.Child(ag_format.Meta("  validatorAdmin", inst.AccountMetaSlice.Get(7)))
+						accountsBranch.Child(ag_format.Meta("    tokenProgram", inst.AccountMetaSlice.Get(8)))
+						accountsBranch.Child(ag_format.Meta("           clock", inst.AccountMetaSlice.Get(9)))
 					})
 				})
 		})
@@ -249,7 +249,7 @@ func NewValidatorWithdrawReceiptInstruction(
 	pipeline ag_solanago.PublicKey,
 	pcVault ag_solanago.PublicKey,
 	payout ag_solanago.PublicKey,
-	validatorMember ag_solanago.PublicKey,
+	validatorManager ag_solanago.PublicKey,
 	receipt ag_solanago.PublicKey,
 	validatorFund ag_solanago.PublicKey,
 	validatorAdmin ag_solanago.PublicKey,
@@ -260,7 +260,7 @@ func NewValidatorWithdrawReceiptInstruction(
 		SetPipelineAccount(pipeline).
 		SetPcVaultAccount(pcVault).
 		SetPayoutAccount(payout).
-		SetValidatorMemberAccount(validatorMember).
+		SetValidatorManagerAccount(validatorManager).
 		SetReceiptAccount(receipt).
 		SetValidatorFundAccount(validatorFund).
 		SetValidatorAdminAccount(validatorAdmin).

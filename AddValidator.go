@@ -23,7 +23,7 @@ type AddValidator struct {
 
 	// [0] = [] controller
 	//
-	// [1] = [WRITE] validatorMember
+	// [1] = [WRITE] validatorManager
 	//
 	// [2] = [] vote
 	//
@@ -58,14 +58,14 @@ func (inst *AddValidator) GetControllerAccount() *ag_solanago.AccountMeta {
 	return inst.AccountMetaSlice.Get(0)
 }
 
-// SetValidatorMemberAccount sets the "validatorMember" account.
-func (inst *AddValidator) SetValidatorMemberAccount(validatorMember ag_solanago.PublicKey) *AddValidator {
-	inst.AccountMetaSlice[1] = ag_solanago.Meta(validatorMember).WRITE()
+// SetValidatorManagerAccount sets the "validatorManager" account.
+func (inst *AddValidator) SetValidatorManagerAccount(validatorManager ag_solanago.PublicKey) *AddValidator {
+	inst.AccountMetaSlice[1] = ag_solanago.Meta(validatorManager).WRITE()
 	return inst
 }
 
-// GetValidatorMemberAccount gets the "validatorMember" account.
-func (inst *AddValidator) GetValidatorMemberAccount() *ag_solanago.AccountMeta {
+// GetValidatorManagerAccount gets the "validatorManager" account.
+func (inst *AddValidator) GetValidatorManagerAccount() *ag_solanago.AccountMeta {
 	return inst.AccountMetaSlice.Get(1)
 }
 
@@ -159,7 +159,7 @@ func (inst *AddValidator) Validate() error {
 			return errors.New("accounts.Controller is not set")
 		}
 		if inst.AccountMetaSlice[1] == nil {
-			return errors.New("accounts.ValidatorMember is not set")
+			return errors.New("accounts.ValidatorManager is not set")
 		}
 		if inst.AccountMetaSlice[2] == nil {
 			return errors.New("accounts.Vote is not set")
@@ -196,14 +196,14 @@ func (inst *AddValidator) EncodeToTree(parent ag_treeout.Branches) {
 
 					// Accounts of the instruction:
 					instructionBranch.Child("Accounts[len=8]").ParentFunc(func(accountsBranch ag_treeout.Branches) {
-						accountsBranch.Child(ag_format.Meta("     controller", inst.AccountMetaSlice.Get(0)))
-						accountsBranch.Child(ag_format.Meta("validatorMember", inst.AccountMetaSlice.Get(1)))
-						accountsBranch.Child(ag_format.Meta("           vote", inst.AccountMetaSlice.Get(2)))
-						accountsBranch.Child(ag_format.Meta("          stake", inst.AccountMetaSlice.Get(3)))
-						accountsBranch.Child(ag_format.Meta("      voteAdmin", inst.AccountMetaSlice.Get(4)))
-						accountsBranch.Child(ag_format.Meta(" validatorAdmin", inst.AccountMetaSlice.Get(5)))
-						accountsBranch.Child(ag_format.Meta("  systemProgram", inst.AccountMetaSlice.Get(6)))
-						accountsBranch.Child(ag_format.Meta("           rent", inst.AccountMetaSlice.Get(7)))
+						accountsBranch.Child(ag_format.Meta("      controller", inst.AccountMetaSlice.Get(0)))
+						accountsBranch.Child(ag_format.Meta("validatorManager", inst.AccountMetaSlice.Get(1)))
+						accountsBranch.Child(ag_format.Meta("            vote", inst.AccountMetaSlice.Get(2)))
+						accountsBranch.Child(ag_format.Meta("           stake", inst.AccountMetaSlice.Get(3)))
+						accountsBranch.Child(ag_format.Meta("       voteAdmin", inst.AccountMetaSlice.Get(4)))
+						accountsBranch.Child(ag_format.Meta("  validatorAdmin", inst.AccountMetaSlice.Get(5)))
+						accountsBranch.Child(ag_format.Meta("   systemProgram", inst.AccountMetaSlice.Get(6)))
+						accountsBranch.Child(ag_format.Meta("            rent", inst.AccountMetaSlice.Get(7)))
 					})
 				})
 		})
@@ -220,7 +220,7 @@ func (obj *AddValidator) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err e
 func NewAddValidatorInstruction(
 	// Accounts:
 	controller ag_solanago.PublicKey,
-	validatorMember ag_solanago.PublicKey,
+	validatorManager ag_solanago.PublicKey,
 	vote ag_solanago.PublicKey,
 	stake ag_solanago.PublicKey,
 	voteAdmin ag_solanago.PublicKey,
@@ -229,7 +229,7 @@ func NewAddValidatorInstruction(
 	rent ag_solanago.PublicKey) *AddValidator {
 	return NewAddValidatorInstructionBuilder().
 		SetControllerAccount(controller).
-		SetValidatorMemberAccount(validatorMember).
+		SetValidatorManagerAccount(validatorManager).
 		SetVoteAccount(vote).
 		SetStakeAccount(stake).
 		SetVoteAdminAccount(voteAdmin).

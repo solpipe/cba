@@ -863,19 +863,93 @@ func (obj *Receipt) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error)
 	return nil
 }
 
-type StakerMember struct {
+type StakerManager struct {
+	Bump       uint8
+	Controller ag_solanago.PublicKey
+	Stake      ag_solanago.PublicKey
+	Admin      ag_solanago.PublicKey
+}
+
+var StakerManagerDiscriminator = [8]byte{140, 123, 186, 219, 231, 34, 208, 224}
+
+func (obj StakerManager) MarshalWithEncoder(encoder *ag_binary.Encoder) (err error) {
+	// Write account discriminator:
+	err = encoder.WriteBytes(StakerManagerDiscriminator[:], false)
+	if err != nil {
+		return err
+	}
+	// Serialize `Bump` param:
+	err = encoder.Encode(obj.Bump)
+	if err != nil {
+		return err
+	}
+	// Serialize `Controller` param:
+	err = encoder.Encode(obj.Controller)
+	if err != nil {
+		return err
+	}
+	// Serialize `Stake` param:
+	err = encoder.Encode(obj.Stake)
+	if err != nil {
+		return err
+	}
+	// Serialize `Admin` param:
+	err = encoder.Encode(obj.Admin)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (obj *StakerManager) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error) {
+	// Read and check account discriminator:
+	{
+		discriminator, err := decoder.ReadTypeID()
+		if err != nil {
+			return err
+		}
+		if !discriminator.Equal(StakerManagerDiscriminator[:]) {
+			return fmt.Errorf(
+				"wrong discriminator: wanted %s, got %s",
+				"[140 123 186 219 231 34 208 224]",
+				fmt.Sprint(discriminator[:]))
+		}
+	}
+	// Deserialize `Bump`:
+	err = decoder.Decode(&obj.Bump)
+	if err != nil {
+		return err
+	}
+	// Deserialize `Controller`:
+	err = decoder.Decode(&obj.Controller)
+	if err != nil {
+		return err
+	}
+	// Deserialize `Stake`:
+	err = decoder.Decode(&obj.Stake)
+	if err != nil {
+		return err
+	}
+	// Deserialize `Admin`:
+	err = decoder.Decode(&obj.Admin)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type StakerReceipt struct {
 	Bump           uint8
 	Receipt        ag_solanago.PublicKey
-	Stake          ag_solanago.PublicKey
-	PcVault        ag_solanago.PublicKey
+	Manager        ag_solanago.PublicKey
 	DelegatedStake uint64
 }
 
-var StakerMemberDiscriminator = [8]byte{21, 191, 126, 39, 175, 235, 92, 31}
+var StakerReceiptDiscriminator = [8]byte{4, 6, 116, 125, 98, 128, 72, 59}
 
-func (obj StakerMember) MarshalWithEncoder(encoder *ag_binary.Encoder) (err error) {
+func (obj StakerReceipt) MarshalWithEncoder(encoder *ag_binary.Encoder) (err error) {
 	// Write account discriminator:
-	err = encoder.WriteBytes(StakerMemberDiscriminator[:], false)
+	err = encoder.WriteBytes(StakerReceiptDiscriminator[:], false)
 	if err != nil {
 		return err
 	}
@@ -889,13 +963,8 @@ func (obj StakerMember) MarshalWithEncoder(encoder *ag_binary.Encoder) (err erro
 	if err != nil {
 		return err
 	}
-	// Serialize `Stake` param:
-	err = encoder.Encode(obj.Stake)
-	if err != nil {
-		return err
-	}
-	// Serialize `PcVault` param:
-	err = encoder.Encode(obj.PcVault)
+	// Serialize `Manager` param:
+	err = encoder.Encode(obj.Manager)
 	if err != nil {
 		return err
 	}
@@ -907,17 +976,17 @@ func (obj StakerMember) MarshalWithEncoder(encoder *ag_binary.Encoder) (err erro
 	return nil
 }
 
-func (obj *StakerMember) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error) {
+func (obj *StakerReceipt) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error) {
 	// Read and check account discriminator:
 	{
 		discriminator, err := decoder.ReadTypeID()
 		if err != nil {
 			return err
 		}
-		if !discriminator.Equal(StakerMemberDiscriminator[:]) {
+		if !discriminator.Equal(StakerReceiptDiscriminator[:]) {
 			return fmt.Errorf(
 				"wrong discriminator: wanted %s, got %s",
-				"[21 191 126 39 175 235 92 31]",
+				"[4 6 116 125 98 128 72 59]",
 				fmt.Sprint(discriminator[:]))
 		}
 	}
@@ -931,13 +1000,8 @@ func (obj *StakerMember) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err e
 	if err != nil {
 		return err
 	}
-	// Deserialize `Stake`:
-	err = decoder.Decode(&obj.Stake)
-	if err != nil {
-		return err
-	}
-	// Deserialize `PcVault`:
-	err = decoder.Decode(&obj.PcVault)
+	// Deserialize `Manager`:
+	err = decoder.Decode(&obj.Manager)
 	if err != nil {
 		return err
 	}
@@ -949,21 +1013,21 @@ func (obj *StakerMember) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err e
 	return nil
 }
 
-type ValidatorMember struct {
-	Bump                  uint8
-	Receipt               ag_solanago.PublicKey
-	Vote                  ag_solanago.PublicKey
-	Admin                 ag_solanago.PublicKey
-	Controller            ag_solanago.PublicKey
-	IsSet                 bool
-	HasValidatorWithdrawn bool
+type ValidatorManager struct {
+	Bump       uint8
+	Ring       []ReceiptWithStartFinish
+	NextInsert uint8
+	LastInsert uint8
+	Vote       ag_solanago.PublicKey
+	Admin      ag_solanago.PublicKey
+	Controller ag_solanago.PublicKey
 }
 
-var ValidatorMemberDiscriminator = [8]byte{176, 174, 147, 68, 122, 100, 104, 120}
+var ValidatorManagerDiscriminator = [8]byte{136, 221, 130, 98, 176, 140, 237, 193}
 
-func (obj ValidatorMember) MarshalWithEncoder(encoder *ag_binary.Encoder) (err error) {
+func (obj ValidatorManager) MarshalWithEncoder(encoder *ag_binary.Encoder) (err error) {
 	// Write account discriminator:
-	err = encoder.WriteBytes(ValidatorMemberDiscriminator[:], false)
+	err = encoder.WriteBytes(ValidatorManagerDiscriminator[:], false)
 	if err != nil {
 		return err
 	}
@@ -972,8 +1036,18 @@ func (obj ValidatorMember) MarshalWithEncoder(encoder *ag_binary.Encoder) (err e
 	if err != nil {
 		return err
 	}
-	// Serialize `Receipt` param:
-	err = encoder.Encode(obj.Receipt)
+	// Serialize `Ring` param:
+	err = encoder.Encode(obj.Ring)
+	if err != nil {
+		return err
+	}
+	// Serialize `NextInsert` param:
+	err = encoder.Encode(obj.NextInsert)
+	if err != nil {
+		return err
+	}
+	// Serialize `LastInsert` param:
+	err = encoder.Encode(obj.LastInsert)
 	if err != nil {
 		return err
 	}
@@ -992,30 +1066,20 @@ func (obj ValidatorMember) MarshalWithEncoder(encoder *ag_binary.Encoder) (err e
 	if err != nil {
 		return err
 	}
-	// Serialize `IsSet` param:
-	err = encoder.Encode(obj.IsSet)
-	if err != nil {
-		return err
-	}
-	// Serialize `HasValidatorWithdrawn` param:
-	err = encoder.Encode(obj.HasValidatorWithdrawn)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
-func (obj *ValidatorMember) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error) {
+func (obj *ValidatorManager) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err error) {
 	// Read and check account discriminator:
 	{
 		discriminator, err := decoder.ReadTypeID()
 		if err != nil {
 			return err
 		}
-		if !discriminator.Equal(ValidatorMemberDiscriminator[:]) {
+		if !discriminator.Equal(ValidatorManagerDiscriminator[:]) {
 			return fmt.Errorf(
 				"wrong discriminator: wanted %s, got %s",
-				"[176 174 147 68 122 100 104 120]",
+				"[136 221 130 98 176 140 237 193]",
 				fmt.Sprint(discriminator[:]))
 		}
 	}
@@ -1024,8 +1088,18 @@ func (obj *ValidatorMember) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (er
 	if err != nil {
 		return err
 	}
-	// Deserialize `Receipt`:
-	err = decoder.Decode(&obj.Receipt)
+	// Deserialize `Ring`:
+	err = decoder.Decode(&obj.Ring)
+	if err != nil {
+		return err
+	}
+	// Deserialize `NextInsert`:
+	err = decoder.Decode(&obj.NextInsert)
+	if err != nil {
+		return err
+	}
+	// Deserialize `LastInsert`:
+	err = decoder.Decode(&obj.LastInsert)
 	if err != nil {
 		return err
 	}
@@ -1041,16 +1115,6 @@ func (obj *ValidatorMember) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (er
 	}
 	// Deserialize `Controller`:
 	err = decoder.Decode(&obj.Controller)
-	if err != nil {
-		return err
-	}
-	// Deserialize `IsSet`:
-	err = decoder.Decode(&obj.IsSet)
-	if err != nil {
-		return err
-	}
-	// Deserialize `HasValidatorWithdrawn`:
-	err = decoder.Decode(&obj.HasValidatorWithdrawn)
 	if err != nil {
 		return err
 	}

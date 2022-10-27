@@ -19,7 +19,7 @@ type SetValidator struct {
 	//
 	// [2] = [] payout
 	//
-	// [3] = [] validatorMember
+	// [3] = [] validatorManager
 	//
 	// [4] = [WRITE, SIGNER] receipt
 	//
@@ -74,14 +74,14 @@ func (inst *SetValidator) GetPayoutAccount() *ag_solanago.AccountMeta {
 	return inst.AccountMetaSlice.Get(2)
 }
 
-// SetValidatorMemberAccount sets the "validatorMember" account.
-func (inst *SetValidator) SetValidatorMemberAccount(validatorMember ag_solanago.PublicKey) *SetValidator {
-	inst.AccountMetaSlice[3] = ag_solanago.Meta(validatorMember)
+// SetValidatorManagerAccount sets the "validatorManager" account.
+func (inst *SetValidator) SetValidatorManagerAccount(validatorManager ag_solanago.PublicKey) *SetValidator {
+	inst.AccountMetaSlice[3] = ag_solanago.Meta(validatorManager)
 	return inst
 }
 
-// GetValidatorMemberAccount gets the "validatorMember" account.
-func (inst *SetValidator) GetValidatorMemberAccount() *ag_solanago.AccountMeta {
+// GetValidatorManagerAccount gets the "validatorManager" account.
+func (inst *SetValidator) GetValidatorManagerAccount() *ag_solanago.AccountMeta {
 	return inst.AccountMetaSlice.Get(3)
 }
 
@@ -170,7 +170,7 @@ func (inst *SetValidator) Validate() error {
 			return errors.New("accounts.Payout is not set")
 		}
 		if inst.AccountMetaSlice[3] == nil {
-			return errors.New("accounts.ValidatorMember is not set")
+			return errors.New("accounts.ValidatorManager is not set")
 		}
 		if inst.AccountMetaSlice[4] == nil {
 			return errors.New("accounts.Receipt is not set")
@@ -204,15 +204,15 @@ func (inst *SetValidator) EncodeToTree(parent ag_treeout.Branches) {
 
 					// Accounts of the instruction:
 					instructionBranch.Child("Accounts[len=9]").ParentFunc(func(accountsBranch ag_treeout.Branches) {
-						accountsBranch.Child(ag_format.Meta("     controller", inst.AccountMetaSlice.Get(0)))
-						accountsBranch.Child(ag_format.Meta("       pipeline", inst.AccountMetaSlice.Get(1)))
-						accountsBranch.Child(ag_format.Meta("         payout", inst.AccountMetaSlice.Get(2)))
-						accountsBranch.Child(ag_format.Meta("validatorMember", inst.AccountMetaSlice.Get(3)))
-						accountsBranch.Child(ag_format.Meta("        receipt", inst.AccountMetaSlice.Get(4)))
-						accountsBranch.Child(ag_format.Meta(" validatorAdmin", inst.AccountMetaSlice.Get(5)))
-						accountsBranch.Child(ag_format.Meta("          clock", inst.AccountMetaSlice.Get(6)))
-						accountsBranch.Child(ag_format.Meta("  systemProgram", inst.AccountMetaSlice.Get(7)))
-						accountsBranch.Child(ag_format.Meta("           rent", inst.AccountMetaSlice.Get(8)))
+						accountsBranch.Child(ag_format.Meta("      controller", inst.AccountMetaSlice.Get(0)))
+						accountsBranch.Child(ag_format.Meta("        pipeline", inst.AccountMetaSlice.Get(1)))
+						accountsBranch.Child(ag_format.Meta("          payout", inst.AccountMetaSlice.Get(2)))
+						accountsBranch.Child(ag_format.Meta("validatorManager", inst.AccountMetaSlice.Get(3)))
+						accountsBranch.Child(ag_format.Meta("         receipt", inst.AccountMetaSlice.Get(4)))
+						accountsBranch.Child(ag_format.Meta("  validatorAdmin", inst.AccountMetaSlice.Get(5)))
+						accountsBranch.Child(ag_format.Meta("           clock", inst.AccountMetaSlice.Get(6)))
+						accountsBranch.Child(ag_format.Meta("   systemProgram", inst.AccountMetaSlice.Get(7)))
+						accountsBranch.Child(ag_format.Meta("            rent", inst.AccountMetaSlice.Get(8)))
 					})
 				})
 		})
@@ -231,7 +231,7 @@ func NewSetValidatorInstruction(
 	controller ag_solanago.PublicKey,
 	pipeline ag_solanago.PublicKey,
 	payout ag_solanago.PublicKey,
-	validatorMember ag_solanago.PublicKey,
+	validatorManager ag_solanago.PublicKey,
 	receipt ag_solanago.PublicKey,
 	validatorAdmin ag_solanago.PublicKey,
 	clock ag_solanago.PublicKey,
@@ -241,7 +241,7 @@ func NewSetValidatorInstruction(
 		SetControllerAccount(controller).
 		SetPipelineAccount(pipeline).
 		SetPayoutAccount(payout).
-		SetValidatorMemberAccount(validatorMember).
+		SetValidatorManagerAccount(validatorManager).
 		SetReceiptAccount(receipt).
 		SetValidatorAdminAccount(validatorAdmin).
 		SetClockAccount(clock).

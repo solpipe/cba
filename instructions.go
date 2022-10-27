@@ -98,6 +98,8 @@ var (
 
 	Instruction_SetValidator = ag_binary.TypeID([8]byte{150, 135, 78, 171, 156, 91, 161, 221})
 
+	Instruction_CreateStakerManager = ag_binary.TypeID([8]byte{120, 184, 140, 233, 101, 96, 218, 52})
+
 	// Create a StakerMember account.
 	//
 	// # Panics
@@ -145,6 +147,8 @@ func InstructionIDToName(id ag_binary.TypeID) string {
 		return "AddValidator"
 	case Instruction_SetValidator:
 		return "SetValidator"
+	case Instruction_CreateStakerManager:
+		return "CreateStakerManager"
 	case Instruction_AddStaker:
 		return "AddStaker"
 	case Instruction_UpdateReceipt:
@@ -207,6 +211,9 @@ var InstructionImplDef = ag_binary.NewVariantDefinition(
 		},
 		{
 			"set_validator", (*SetValidator)(nil),
+		},
+		{
+			"create_staker_manager", (*CreateStakerManager)(nil),
 		},
 		{
 			"add_staker", (*AddStaker)(nil),

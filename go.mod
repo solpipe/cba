@@ -1,6 +1,6 @@
 module github.com/solpipe/cba
 
-go 1.18
+go 1.19
 
 require (
 	github.com/SolmateDev/solana-go v1.4.2-custom
