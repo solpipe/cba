@@ -98,8 +98,6 @@ var (
 
 	Instruction_SetValidator = ag_binary.TypeID([8]byte{150, 135, 78, 171, 156, 91, 161, 221})
 
-	Instruction_CreateStakerManager = ag_binary.TypeID([8]byte{120, 184, 140, 233, 101, 96, 218, 52})
-
 	// Create a StakerMember account.
 	//
 	// # Panics
@@ -110,6 +108,17 @@ var (
 	//
 	// This function will return an error if .
 	Instruction_AddStaker = ag_binary.TypeID([8]byte{3, 230, 74, 165, 5, 209, 205, 44})
+
+	// add staker to receipt
+	//
+	// # Panics
+	//
+	// Panics if .
+	//
+	// # Errors
+	//
+	// This function will return an error if .
+	Instruction_AddStakerToReceipt = ag_binary.TypeID([8]byte{235, 18, 27, 165, 101, 173, 141, 93})
 
 	Instruction_UpdateReceipt = ag_binary.TypeID([8]byte{243, 126, 212, 140, 117, 11, 96, 219})
 
@@ -147,10 +156,10 @@ func InstructionIDToName(id ag_binary.TypeID) string {
 		return "AddValidator"
 	case Instruction_SetValidator:
 		return "SetValidator"
-	case Instruction_CreateStakerManager:
-		return "CreateStakerManager"
 	case Instruction_AddStaker:
 		return "AddStaker"
+	case Instruction_AddStakerToReceipt:
+		return "AddStakerToReceipt"
 	case Instruction_UpdateReceipt:
 		return "UpdateReceipt"
 	case Instruction_StakerWithdrawReceipt:
@@ -213,10 +222,10 @@ var InstructionImplDef = ag_binary.NewVariantDefinition(
 			"set_validator", (*SetValidator)(nil),
 		},
 		{
-			"create_staker_manager", (*CreateStakerManager)(nil),
+			"add_staker", (*AddStaker)(nil),
 		},
 		{
-			"add_staker", (*AddStaker)(nil),
+			"add_staker_to_receipt", (*AddStakerToReceipt)(nil),
 		},
 		{
 			"update_receipt", (*UpdateReceipt)(nil),

@@ -10,19 +10,19 @@ import (
 	"testing"
 )
 
-func TestEncodeDecode_CreateStakerManager(t *testing.T) {
+func TestEncodeDecode_AddStakerToReceipt(t *testing.T) {
 	fu := ag_gofuzz.New().NilChance(0)
 	for i := 0; i < 1; i++ {
-		t.Run("CreateStakerManager"+strconv.Itoa(i), func(t *testing.T) {
+		t.Run("AddStakerToReceipt"+strconv.Itoa(i), func(t *testing.T) {
 			{
-				params := new(CreateStakerManager)
+				params := new(AddStakerToReceipt)
 				fu.Fuzz(params)
 				params.AccountMetaSlice = nil
 				buf := new(bytes.Buffer)
 				err := encodeT(*params, buf)
 				ag_require.NoError(t, err)
 				//
-				got := new(CreateStakerManager)
+				got := new(AddStakerToReceipt)
 				err = decodeT(got, buf.Bytes())
 				got.AccountMetaSlice = nil
 				ag_require.NoError(t, err)

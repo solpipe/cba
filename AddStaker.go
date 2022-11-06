@@ -21,41 +21,33 @@ import (
 // This function will return an error if .
 type AddStaker struct {
 
-	// [0] = [WRITE] controller
+	// [0] = [] controller
 	//
-	// [1] = [] payout
+	// [1] = [WRITE] stakerManager
 	//
-	// [2] = [WRITE] receipt
+	// [2] = [] staker
 	//
-	// [3] = [] stakerManager
+	// [3] = [SIGNER] stakerSigner
 	//
-	// [4] = [] validatorManager
+	// [4] = [WRITE, SIGNER] stakerAdmin
 	//
-	// [5] = [WRITE] stakerReceipt
+	// [5] = [] systemProgram
 	//
-	// [6] = [] staker
-	//
-	// [7] = [WRITE, SIGNER] stakeAdmin
-	//
-	// [8] = [] clock
-	//
-	// [9] = [] systemProgram
-	//
-	// [10] = [] rent
+	// [6] = [] rent
 	ag_solanago.AccountMetaSlice `bin:"-"`
 }
 
 // NewAddStakerInstructionBuilder creates a new `AddStaker` instruction builder.
 func NewAddStakerInstructionBuilder() *AddStaker {
 	nd := &AddStaker{
-		AccountMetaSlice: make(ag_solanago.AccountMetaSlice, 11),
+		AccountMetaSlice: make(ag_solanago.AccountMetaSlice, 7),
 	}
 	return nd
 }
 
 // SetControllerAccount sets the "controller" account.
 func (inst *AddStaker) SetControllerAccount(controller ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[0] = ag_solanago.Meta(controller).WRITE()
+	inst.AccountMetaSlice[0] = ag_solanago.Meta(controller)
 	return inst
 }
 
@@ -64,114 +56,70 @@ func (inst *AddStaker) GetControllerAccount() *ag_solanago.AccountMeta {
 	return inst.AccountMetaSlice.Get(0)
 }
 
-// SetPayoutAccount sets the "payout" account.
-func (inst *AddStaker) SetPayoutAccount(payout ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[1] = ag_solanago.Meta(payout)
-	return inst
-}
-
-// GetPayoutAccount gets the "payout" account.
-func (inst *AddStaker) GetPayoutAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(1)
-}
-
-// SetReceiptAccount sets the "receipt" account.
-func (inst *AddStaker) SetReceiptAccount(receipt ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[2] = ag_solanago.Meta(receipt).WRITE()
-	return inst
-}
-
-// GetReceiptAccount gets the "receipt" account.
-func (inst *AddStaker) GetReceiptAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(2)
-}
-
 // SetStakerManagerAccount sets the "stakerManager" account.
 func (inst *AddStaker) SetStakerManagerAccount(stakerManager ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[3] = ag_solanago.Meta(stakerManager)
+	inst.AccountMetaSlice[1] = ag_solanago.Meta(stakerManager).WRITE()
 	return inst
 }
 
 // GetStakerManagerAccount gets the "stakerManager" account.
 func (inst *AddStaker) GetStakerManagerAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(3)
-}
-
-// SetValidatorManagerAccount sets the "validatorManager" account.
-func (inst *AddStaker) SetValidatorManagerAccount(validatorManager ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[4] = ag_solanago.Meta(validatorManager)
-	return inst
-}
-
-// GetValidatorManagerAccount gets the "validatorManager" account.
-func (inst *AddStaker) GetValidatorManagerAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(4)
-}
-
-// SetStakerReceiptAccount sets the "stakerReceipt" account.
-func (inst *AddStaker) SetStakerReceiptAccount(stakerReceipt ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[5] = ag_solanago.Meta(stakerReceipt).WRITE()
-	return inst
-}
-
-// GetStakerReceiptAccount gets the "stakerReceipt" account.
-func (inst *AddStaker) GetStakerReceiptAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(5)
+	return inst.AccountMetaSlice.Get(1)
 }
 
 // SetStakerAccount sets the "staker" account.
 func (inst *AddStaker) SetStakerAccount(staker ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[6] = ag_solanago.Meta(staker)
+	inst.AccountMetaSlice[2] = ag_solanago.Meta(staker)
 	return inst
 }
 
 // GetStakerAccount gets the "staker" account.
 func (inst *AddStaker) GetStakerAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(6)
+	return inst.AccountMetaSlice.Get(2)
 }
 
-// SetStakeAdminAccount sets the "stakeAdmin" account.
-func (inst *AddStaker) SetStakeAdminAccount(stakeAdmin ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[7] = ag_solanago.Meta(stakeAdmin).WRITE().SIGNER()
+// SetStakerSignerAccount sets the "stakerSigner" account.
+func (inst *AddStaker) SetStakerSignerAccount(stakerSigner ag_solanago.PublicKey) *AddStaker {
+	inst.AccountMetaSlice[3] = ag_solanago.Meta(stakerSigner).SIGNER()
 	return inst
 }
 
-// GetStakeAdminAccount gets the "stakeAdmin" account.
-func (inst *AddStaker) GetStakeAdminAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(7)
+// GetStakerSignerAccount gets the "stakerSigner" account.
+func (inst *AddStaker) GetStakerSignerAccount() *ag_solanago.AccountMeta {
+	return inst.AccountMetaSlice.Get(3)
 }
 
-// SetClockAccount sets the "clock" account.
-func (inst *AddStaker) SetClockAccount(clock ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[8] = ag_solanago.Meta(clock)
+// SetStakerAdminAccount sets the "stakerAdmin" account.
+func (inst *AddStaker) SetStakerAdminAccount(stakerAdmin ag_solanago.PublicKey) *AddStaker {
+	inst.AccountMetaSlice[4] = ag_solanago.Meta(stakerAdmin).WRITE().SIGNER()
 	return inst
 }
 
-// GetClockAccount gets the "clock" account.
-func (inst *AddStaker) GetClockAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(8)
+// GetStakerAdminAccount gets the "stakerAdmin" account.
+func (inst *AddStaker) GetStakerAdminAccount() *ag_solanago.AccountMeta {
+	return inst.AccountMetaSlice.Get(4)
 }
 
 // SetSystemProgramAccount sets the "systemProgram" account.
 func (inst *AddStaker) SetSystemProgramAccount(systemProgram ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[9] = ag_solanago.Meta(systemProgram)
+	inst.AccountMetaSlice[5] = ag_solanago.Meta(systemProgram)
 	return inst
 }
 
 // GetSystemProgramAccount gets the "systemProgram" account.
 func (inst *AddStaker) GetSystemProgramAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(9)
+	return inst.AccountMetaSlice.Get(5)
 }
 
 // SetRentAccount sets the "rent" account.
 func (inst *AddStaker) SetRentAccount(rent ag_solanago.PublicKey) *AddStaker {
-	inst.AccountMetaSlice[10] = ag_solanago.Meta(rent)
+	inst.AccountMetaSlice[6] = ag_solanago.Meta(rent)
 	return inst
 }
 
 // GetRentAccount gets the "rent" account.
 func (inst *AddStaker) GetRentAccount() *ag_solanago.AccountMeta {
-	return inst.AccountMetaSlice.Get(10)
+	return inst.AccountMetaSlice.Get(6)
 }
 
 func (inst AddStaker) Build() *Instruction {
@@ -198,33 +146,21 @@ func (inst *AddStaker) Validate() error {
 			return errors.New("accounts.Controller is not set")
 		}
 		if inst.AccountMetaSlice[1] == nil {
-			return errors.New("accounts.Payout is not set")
-		}
-		if inst.AccountMetaSlice[2] == nil {
-			return errors.New("accounts.Receipt is not set")
-		}
-		if inst.AccountMetaSlice[3] == nil {
 			return errors.New("accounts.StakerManager is not set")
 		}
-		if inst.AccountMetaSlice[4] == nil {
-			return errors.New("accounts.ValidatorManager is not set")
-		}
-		if inst.AccountMetaSlice[5] == nil {
-			return errors.New("accounts.StakerReceipt is not set")
-		}
-		if inst.AccountMetaSlice[6] == nil {
+		if inst.AccountMetaSlice[2] == nil {
 			return errors.New("accounts.Staker is not set")
 		}
-		if inst.AccountMetaSlice[7] == nil {
-			return errors.New("accounts.StakeAdmin is not set")
+		if inst.AccountMetaSlice[3] == nil {
+			return errors.New("accounts.StakerSigner is not set")
 		}
-		if inst.AccountMetaSlice[8] == nil {
-			return errors.New("accounts.Clock is not set")
+		if inst.AccountMetaSlice[4] == nil {
+			return errors.New("accounts.StakerAdmin is not set")
 		}
-		if inst.AccountMetaSlice[9] == nil {
+		if inst.AccountMetaSlice[5] == nil {
 			return errors.New("accounts.SystemProgram is not set")
 		}
-		if inst.AccountMetaSlice[10] == nil {
+		if inst.AccountMetaSlice[6] == nil {
 			return errors.New("accounts.Rent is not set")
 		}
 	}
@@ -243,18 +179,14 @@ func (inst *AddStaker) EncodeToTree(parent ag_treeout.Branches) {
 					instructionBranch.Child("Params[len=0]").ParentFunc(func(paramsBranch ag_treeout.Branches) {})
 
 					// Accounts of the instruction:
-					instructionBranch.Child("Accounts[len=11]").ParentFunc(func(accountsBranch ag_treeout.Branches) {
-						accountsBranch.Child(ag_format.Meta("      controller", inst.AccountMetaSlice.Get(0)))
-						accountsBranch.Child(ag_format.Meta("          payout", inst.AccountMetaSlice.Get(1)))
-						accountsBranch.Child(ag_format.Meta("         receipt", inst.AccountMetaSlice.Get(2)))
-						accountsBranch.Child(ag_format.Meta("   stakerManager", inst.AccountMetaSlice.Get(3)))
-						accountsBranch.Child(ag_format.Meta("validatorManager", inst.AccountMetaSlice.Get(4)))
-						accountsBranch.Child(ag_format.Meta("   stakerReceipt", inst.AccountMetaSlice.Get(5)))
-						accountsBranch.Child(ag_format.Meta("          staker", inst.AccountMetaSlice.Get(6)))
-						accountsBranch.Child(ag_format.Meta("      stakeAdmin", inst.AccountMetaSlice.Get(7)))
-						accountsBranch.Child(ag_format.Meta("           clock", inst.AccountMetaSlice.Get(8)))
-						accountsBranch.Child(ag_format.Meta("   systemProgram", inst.AccountMetaSlice.Get(9)))
-						accountsBranch.Child(ag_format.Meta("            rent", inst.AccountMetaSlice.Get(10)))
+					instructionBranch.Child("Accounts[len=7]").ParentFunc(func(accountsBranch ag_treeout.Branches) {
+						accountsBranch.Child(ag_format.Meta("   controller", inst.AccountMetaSlice.Get(0)))
+						accountsBranch.Child(ag_format.Meta("stakerManager", inst.AccountMetaSlice.Get(1)))
+						accountsBranch.Child(ag_format.Meta("       staker", inst.AccountMetaSlice.Get(2)))
+						accountsBranch.Child(ag_format.Meta(" stakerSigner", inst.AccountMetaSlice.Get(3)))
+						accountsBranch.Child(ag_format.Meta("  stakerAdmin", inst.AccountMetaSlice.Get(4)))
+						accountsBranch.Child(ag_format.Meta("systemProgram", inst.AccountMetaSlice.Get(5)))
+						accountsBranch.Child(ag_format.Meta("         rent", inst.AccountMetaSlice.Get(6)))
 					})
 				})
 		})
@@ -271,26 +203,18 @@ func (obj *AddStaker) UnmarshalWithDecoder(decoder *ag_binary.Decoder) (err erro
 func NewAddStakerInstruction(
 	// Accounts:
 	controller ag_solanago.PublicKey,
-	payout ag_solanago.PublicKey,
-	receipt ag_solanago.PublicKey,
 	stakerManager ag_solanago.PublicKey,
-	validatorManager ag_solanago.PublicKey,
-	stakerReceipt ag_solanago.PublicKey,
 	staker ag_solanago.PublicKey,
-	stakeAdmin ag_solanago.PublicKey,
-	clock ag_solanago.PublicKey,
+	stakerSigner ag_solanago.PublicKey,
+	stakerAdmin ag_solanago.PublicKey,
 	systemProgram ag_solanago.PublicKey,
 	rent ag_solanago.PublicKey) *AddStaker {
 	return NewAddStakerInstructionBuilder().
 		SetControllerAccount(controller).
-		SetPayoutAccount(payout).
-		SetReceiptAccount(receipt).
 		SetStakerManagerAccount(stakerManager).
-		SetValidatorManagerAccount(validatorManager).
-		SetStakerReceiptAccount(stakerReceipt).
 		SetStakerAccount(staker).
-		SetStakeAdminAccount(stakeAdmin).
-		SetClockAccount(clock).
+		SetStakerSignerAccount(stakerSigner).
+		SetStakerAdminAccount(stakerAdmin).
 		SetSystemProgramAccount(systemProgram).
 		SetRentAccount(rent)
 }
